@@ -118,6 +118,9 @@ const typeDefs = /* GraphQL */ `
     born: Int
     bookCount: Int!
   }
+  type Mutation {
+    addBook(title: String!, published: Int!, author: String!, genres: [String]!): Book!
+  }
 `;
 
 const resolvers = {
@@ -142,6 +145,19 @@ const resolvers = {
   Author: {
     bookCount: (root) => {
       return books.filter((b) => b.author === root.name).length;
+    },
+  },
+  Mutation: {
+    addBook: (root, args) => {
+      const book = { ...args };
+      if (!authors.find((a) => a.name === args.author)) {
+        authors = authors.concat({
+          name: args.author,
+          born: args.born || null,
+        });
+      }
+      books.push(book);
+      return book;
     },
   },
 };
