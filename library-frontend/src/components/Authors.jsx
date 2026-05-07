@@ -12,6 +12,7 @@ const Authors = (props) => {
   });
 
   const result = useQuery(ALL_AUTHORS);
+
   if (!props.show) {
     return null;
   }
@@ -26,9 +27,11 @@ const Authors = (props) => {
   }
 
   const authors = result.data ? result.data.allAuthors : [];
+  const selectedAuthor = author || (authors.length > 0 ? authors[0].name : "");
+
   const submit = async (event) => {
     event.preventDefault();
-    editAuthor({ variables: { name: author, born: parseInt(born) } });
+    editAuthor({ variables: { name: selectedAuthor, born: parseInt(born) } });
     setAuthor("");
     setBorn("");
   };
@@ -55,11 +58,16 @@ const Authors = (props) => {
       <form onSubmit={submit}>
         <div>
           name
-          <input
-            type="text"
-            value={author}
+          <select
+            value={selectedAuthor}
             onChange={({ target }) => setAuthor(target.value)}
-          />
+          >
+            {authors.map((a) => (
+              <option key={a.name} value={a.name}>
+                {a.name}
+              </option>
+            ))}
+          </select>
         </div>
         <div>
           born
