@@ -22,14 +22,13 @@ async function run() {
   
   const query = `
     mutation {
-      addBook(
-        title: "Pimeyden tango",
-        author: "Reijo Mäki",
-        published: 1997,
-        genres: ["crime"]
+      createUser(
+        username: "admin",
+        favoriteGenre: "action"
       ) {
-        title,
-        author
+        username
+        favoriteGenre
+        id
       }
     }
   `;
