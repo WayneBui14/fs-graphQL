@@ -6,10 +6,10 @@ const Books = (props) => {
   const [selectedGenre, setSelectedGenre] = useState("all genres");
   
   // Fetch all books to compute the list of all available genres
-  const { data: allBooksData } = useQuery(ALL_BOOKS);
+  const { data: allBooksData, refetch: refetchAllBooks } = useQuery(ALL_BOOKS);
   
   // Fetch only the books for the selected genre
-  const { data, loading, error } = useQuery(ALL_BOOKS, {
+  const { data, loading, error, refetch: refetchBooks } = useQuery(ALL_BOOKS, {
     variables: { genre: selectedGenre === "all genres" ? null : selectedGenre },
   });
 
@@ -28,6 +28,12 @@ const Books = (props) => {
   const allGenres = allBooksData 
     ? [...new Set(allBooksData.allBooks.flatMap((b) => b.genres))]
     : [];
+
+  const handleGenreSelect = (genre) => {
+    setSelectedGenre(genre);
+    refetchAllBooks();
+    refetchBooks({ genre: genre === "all genres" ? null : genre });
+  };
 
   return (
     <div>
@@ -57,11 +63,11 @@ const Books = (props) => {
       </table>
       <div>
         {allGenres.map((genre) => (
-          <button key={genre} onClick={() => setSelectedGenre(genre)}>
+          <button key={genre} onClick={() => handleGenreSelect(genre)}>
             {genre}
           </button>
         ))}
-        <button onClick={() => setSelectedGenre("all genres")}>all genres</button>
+        <button onClick={() => handleGenreSelect("all genres")}>all genres</button>
       </div>
     </div>
   );
