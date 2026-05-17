@@ -6,11 +6,11 @@ const LoginForm = ({ show, setError, setToken, setPage }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
+  const [errorMsg, setErrorMsg] = useState("");
+
   const [login, result] = useMutation(LOGIN, {
     onError: (error) => {
-      if (setError) {
-        setError(error.graphQLErrors[0]?.message);
-      }
+      setErrorMsg("Login failed");
     },
   });
 
@@ -33,17 +33,20 @@ const LoginForm = ({ show, setError, setToken, setPage }) => {
   }
   return (
     <div>
+      {errorMsg && <div style={{ color: "red" }}>{errorMsg}</div>}
       <form onSubmit={handleSubmit}>
         <div>
-          username{" "}
+          <label htmlFor="username">username</label>
           <input
+            id="username"
             value={username}
             onChange={({ target }) => setUsername(target.value)}
           />
         </div>
         <div>
-          password{" "}
+          <label htmlFor="password">password</label>
           <input
+            id="password"
             type="password"
             value={password}
             onChange={({ target }) => setPassword(target.value)}
